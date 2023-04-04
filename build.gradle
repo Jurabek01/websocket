@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group = 'mimsoft.io'
+version = '0.0.1'
+sourceCompatibility = '17'
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'mimsoft.io.smartcarwebsocket.SmartCarWebSocketApplication'
+        )
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.telegram:telegrambots:6.5.0'
+    implementation 'org.springframework:spring-messaging:6.0.7'
+    // https://mvnrepository.com/artifact/org.springframework/spring-messaging
+    implementation 'org.springframework:spring-web:6.0.7'
+    // https://mvnrepository.com/artifact/org.telegram/telegrambots
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
