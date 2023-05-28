@@ -1,7 +1,9 @@
 package mimsoft.io.smartcarwebsocket.cofig;
 
+import mimsoft.io.smartcarwebsocket.bot.TelegramBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -9,14 +11,21 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class MessageHandler extends TextWebSocketHandler {
 
+    private final TelegramBot telegramBot;
+
     private final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
 
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+
+    public MessageHandler(@Qualifier("telegramBot1") TelegramBot telegramBot) {
+        this.telegramBot = telegramBot;
+    }
 
 
     @Override
@@ -24,6 +33,7 @@ public class MessageHandler extends TextWebSocketHandler {
         sessions.put(message.getPayload(), session);
         logger.info("Received message: " + message.getPayload() + " and put--> " + sessions.get(message.toString()));
         session.sendMessage(new TextMessage("server received your message"));
+        telegramBot.sendText(message.getPayload());
     }
 
     @Override
@@ -32,7 +42,7 @@ public class MessageHandler extends TextWebSocketHandler {
         for ( String i : sessions.keySet()) {
             logger.info("member of session: " + sessions.get(i));
         }
-
+        telegramBot.sendText(Objects.requireNonNull(session.getRemoteAddress()).toString());
     }
 
     public void sendMessage(String uuid, String message) throws Exception {

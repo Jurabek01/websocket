@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class MessageModel {
     private String engine;
     private String block;
+    private Double latitude;
+    private Double longitude;
 }

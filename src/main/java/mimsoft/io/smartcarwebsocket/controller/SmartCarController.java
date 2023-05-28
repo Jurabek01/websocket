@@ -15,9 +15,21 @@ public class SmartCarController {
         this.telegramBot = telegramBot;
     }
 
-    @PostMapping("/reaction")
-    public ResponseEntity postCommands(@RequestBody MessageModel message) {
-        telegramBot.sendTelegram(message);
+    @PostMapping("/status")
+    public ResponseEntity<Void> postCommands(
+            @RequestParam("engine") String engine,
+            @RequestParam("block") String block,
+            @RequestParam("latitude") double latitude,
+            @RequestParam("longitude") double longitude
+    ) {
+        telegramBot.sendTelegram(
+                new MessageModel(
+                        engine,
+                        block,
+                        latitude,
+                        longitude
+                )
+        );
         return ResponseEntity.ok().build();
     }
 
